@@ -14,15 +14,13 @@ def otsu(image):
     if (channels == 3):
         image = rgb2grey(image)
     hist=np.zeros(256)
-    for j in range(rows):
-        for k in range(cols):
-            hist[image[j][k]]+=1
+    hist,bin_edges = np.histogram(image,bins=256,range=(0,255))
     w=np.zeros(256)
     mu=np.zeros(256)
     N=rows*cols
     w[0]=(hist[0]*1.0)/(N)
     for i in range(255):
-        w[i+1] = w[i]+(hist[i+1])/N
+        w[i+1] = w[i]+(hist[i+1]*1.0)/N
     mu[0]=0
     for i in range(255):
         mu[i+1] = mu[i]+(i*hist[i]*1.0)/(N)
@@ -34,10 +32,7 @@ def otsu(image):
         result[i]=t*t/(w[i]*(1-w[i]))
     max=result[0]
     index=0
-    for i in range(255):
-        if (max<result[i+1]):
-            max=result[i+1]
-            index=i+1;
+    index=np.argmax(result)
     return index
 
 if __name__ == "__main__":
@@ -45,6 +40,7 @@ if __name__ == "__main__":
     g = rgb2grey(panda)
     rows,cols,channels = panda.shape
     index = otsu(panda)
+    print(index)
     for i in range(rows):
         for j in range(cols):
             if (g[i][j] > index):

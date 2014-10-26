@@ -21,5 +21,5 @@ def normalise(image):
 if __name__ == "__main__":
 	panda=imread('panda.jpg')
 	norm=normalise(panda)
-	plt.hist(norm.flatten())
+	plt.imshow(norm,cmap=cm.Greys_r)
 	plt.show()

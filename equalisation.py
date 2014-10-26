@@ -13,13 +13,10 @@ def equalise(image):
 		image = rgb2grey(panda)
 	bright_sum = hist = np.zeros(256)
 	psum=0
-	for i in range(0,rows):
-		for j in range(cols):
-			bright_sum[image[i][j]]=bright_sum[image[i][j]] + 1
+	bright_sum,bin_edges = np.histogram(image,bins=256,range=(0,255))
 	number_of_pixels=rows*cols
-	for i in range(256):
-		psum = bright_sum[i] + psum
-		hist[i] = np.floor(255*1.0*psum)/number_of_pixels
+	psum = np.cumsum(bright_sum)
+	hist= np.floor(255*1.0*psum)/number_of_pixels
 	new = np.zeros((rows,cols))
 	for i in range(rows):
 		for j in range(cols):
@@ -30,7 +27,5 @@ if __name__ == "__main__":
 	panda = imread('panda.jpg')
 	grey = rgb2grey(panda)
 	equal = equalise(panda)
-	plt.hist(grey.flatten())
-	plt.show()
-	plt.hist(equal.flatten())
+	plt.imshow(equal,cmap=cm.Greys_r)
 	plt.show()
